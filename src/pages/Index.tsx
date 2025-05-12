@@ -43,6 +43,38 @@ const Index: React.FC = () => {
 
   const handleSubmit = useCallback(
     (camp: Campaign) => {
+      // Basic validations
+      if (!camp.name || !camp.description) {
+        toast.error("Name and description are required");
+        return;
+      }
+
+      // New requirement: at least one LinkedIn profile
+      if (!camp.leads || camp.leads.length === 0) {
+        toast.error("LinkedIn profile is required");
+        return;
+      }
+
+      // URL validation: must include linkedin.com
+      const invalidProfile = camp.leads.find(
+        (url) => !url.includes("linkedin.com")
+      );
+      if (invalidProfile) {
+        toast.error("LinkedIn profile URL must contain linkedin.com");
+        return;
+      }
+
+      // Require at least one account ID
+      if (!camp.accountIDs || camp.accountIDs.length === 0) {
+        toast.error("Account ID is required");
+        return;
+      }
+
+      if (formState.mode === "edit" && !camp._id) {
+        toast.error("Campaign ID is required for editing");
+        return;
+      }
+
       if (formState.mode === "create") {
         const payload: CreateCampaignDTO = {
           name: camp.name,

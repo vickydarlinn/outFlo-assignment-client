@@ -44,6 +44,15 @@ const MessageGeneratorPage: React.FC = () => {
   };
 
   const handleGenerate = () => {
+    if (
+      !profile.name ||
+      !profile.job_title ||
+      !profile.company ||
+      !profile.location
+    ) {
+      toast.error("Please fill in the required fields");
+      return;
+    }
     sendMessageMutate(profile);
   };
 
@@ -77,7 +86,7 @@ const MessageGeneratorPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Name*</Label>
                 <Input
                   id="name"
                   name="name"
@@ -88,7 +97,7 @@ const MessageGeneratorPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="job_title">Job Title</Label>
+                <Label htmlFor="job_title">Job Title*</Label>
                 <Input
                   id="job_title"
                   name="job_title"
@@ -99,7 +108,7 @@ const MessageGeneratorPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="company">Company*</Label>
                 <Input
                   id="company"
                   name="company"
@@ -110,7 +119,7 @@ const MessageGeneratorPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">Location*</Label>
                 <Input
                   id="location"
                   name="location"

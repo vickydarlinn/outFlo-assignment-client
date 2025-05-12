@@ -19,18 +19,6 @@ export interface GeneratedMessage {
   message: string;
 }
 
-export interface LinkedInProfileLead {
-  _id?: string;
-  fullName: string;
-  headline?: string;
-  jobTitle: string;
-  company: string;
-  location: string;
-  profileUrl: string;
-  about?: string;
-  avatarUrl?: string;
-}
-
 export interface FormState {
   isOpen: boolean;
   mode: "create" | "edit";
@@ -53,4 +41,19 @@ export interface UpdateCampaignDTO {
   status?: "ACTIVE" | "INACTIVE" | "DELETED";
   leads?: string[];
   accountIDs?: string[];
+}
+
+export interface PersonCard {
+  name: string | null;
+  country: string | null;
+  photoUrl: string | null;
+  profileUrl: string | null;
+}
+
+export interface LinkedinResult {
+  _id: string;
+  url: string;
+  count: number;
+  people: PersonCard[];
+  createdAt: string; // ISO date
 }
