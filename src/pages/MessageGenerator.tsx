@@ -1,5 +1,5 @@
 import type { LinkedInProfile } from "@/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Card,
@@ -14,19 +14,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Copy, Wand2 } from "lucide-react";
+import { useSendMessageMutate } from "@/hooks/messages/useSendMessageMutate";
 
 const MessageGeneratorPage: React.FC = () => {
+  const { mutate: sendMessageMutate, data, isPending } = useSendMessageMutate();
+
   const [profile, setProfile] = useState<LinkedInProfile>({
-    name: "Sarah Johnson",
-    job_title: "VP of Marketing",
-    company: "TechCorp Solutions",
-    location: "San Francisco, CA",
-    summary:
-      "Growth marketing expert with 10+ years experience in SaaS and B2B lead generation strategies.",
+    name: "",
+    job_title: "",
+    company: "",
+    location: "",
+    summary: "",
   });
 
   const [generatedMessage, setGeneratedMessage] = useState<string>("");
-  const [isGenerating, setIsGenerating] = useState(false);
+
+  // Update local message when the mutation returns new data
+  useEffect(() => {
+    if (data?.message) {
+      setGeneratedMessage(data.message);
+    }
+  }, [data]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,34 +43,14 @@ const MessageGeneratorPage: React.FC = () => {
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleGenerate = async () => {
-  //   setIsGenerating(true);
-  //   try {
-  //     // In a real application, we would call the API here
-  //     const response = mockGenerateMessage(profile);
-  //     setGeneratedMessage(response.message);
-  //     toast({
-  //       title: "Message generated successfully",
-  //       description: "Your personalized message is ready!",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error generating message:", error);
-  //     toast({
-  //       title: "Error generating message",
-  //       description: "Please try again later",
-  //       variant: "destructive",
-  //     });
-  //   } finally {
-  //     setIsGenerating(false);
-  //   }
-  // };
+  const handleGenerate = () => {
+    sendMessageMutate(profile);
+  };
 
   const handleCopy = () => {
+    if (!generatedMessage) return;
     navigator.clipboard.writeText(generatedMessage);
-    toast({
-      title: "Copied to clipboard",
-      description: "Message has been copied to your clipboard",
-    });
+    toast("Copied to clipboard");
   };
 
   return (
@@ -89,9 +77,7 @@ const MessageGeneratorPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">
-                  Name
-                </Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
                   name="name"
@@ -102,9 +88,7 @@ const MessageGeneratorPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="job_title" className="text-sm font-medium">
-                  Job Title
-                </Label>
+                <Label htmlFor="job_title">Job Title</Label>
                 <Input
                   id="job_title"
                   name="job_title"
@@ -115,9 +99,7 @@ const MessageGeneratorPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="company" className="text-sm font-medium">
-                  Company
-                </Label>
+                <Label htmlFor="company">Company</Label>
                 <Input
                   id="company"
                   name="company"
@@ -128,9 +110,7 @@ const MessageGeneratorPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location" className="text-sm font-medium">
-                  Location
-                </Label>
+                <Label htmlFor="location">Location</Label>
                 <Input
                   id="location"
                   name="location"
@@ -142,9 +122,7 @@ const MessageGeneratorPage: React.FC = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="summary" className="text-sm font-medium">
-                Profile Summary
-              </Label>
+              <Label htmlFor="summary">Profile Summary</Label>
               <Textarea
                 id="summary"
                 name="summary"
@@ -159,11 +137,11 @@ const MessageGeneratorPage: React.FC = () => {
           <CardFooter>
             <Button
               className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition-all duration-300"
-              // onClick={handleGenerate}
-              disabled={isGenerating}
+              onClick={handleGenerate}
+              disabled={isPending}
             >
               <Wand2 className="h-4 w-4 mr-2" />
-              {isGenerating ? "Generating..." : "Generate Personalized Message"}
+              {isPending ? "Generating..." : "Generate Personalized Message"}
             </Button>
           </CardFooter>
         </Card>
@@ -190,6 +168,7 @@ const MessageGeneratorPage: React.FC = () => {
                 variant="outline"
                 onClick={handleCopy}
                 className="hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                disabled={!generatedMessage}
               >
                 <Copy className="h-4 w-4 mr-2" />
                 Copy to Clipboard

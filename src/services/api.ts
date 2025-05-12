@@ -102,21 +102,6 @@ export const fetchLeadsBySearchUrl = async (
   }
 };
 
-export const mockGenerateMessage = (
-  profile: LinkedInProfile
-): GeneratedMessage => {
-  return {
-    message: `Hi ${profile.name}, I noticed you're a ${profile.job_title} at ${
-      profile.company
-    } based in ${profile.location}. Given your background in ${profile.summary
-      .split(" ")
-      .slice(0, 3)
-      .join(
-        " "
-      )}..., I thought you might be interested in how our platform can help streamline your lead generation and outreach process. Would you be open to a quick chat this week?`,
-  };
-};
-
 export const mockFetchLeads = (): LinkedInProfileLead[] => {
   return [
     {

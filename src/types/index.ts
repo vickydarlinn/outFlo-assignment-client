@@ -12,7 +12,7 @@ export interface LinkedInProfile {
   job_title: string;
   company: string;
   location: string;
-  summary: string;
+  summary?: string;
 }
 
 export interface GeneratedMessage {
