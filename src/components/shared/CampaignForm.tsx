@@ -25,7 +25,7 @@ interface CampaignFormProps {
 const emptyCampaign: Campaign = {
   name: "",
   description: "",
-  status: "inactive",
+  status: "INACTIVE",
   leads: [],
   accountIDs: [],
 };
