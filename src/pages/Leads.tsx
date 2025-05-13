@@ -12,7 +12,7 @@ import {
 import { useSearchLinkedinMutation } from "@/hooks/linkedin/useSearchLinkedinMutation";
 import { useFetchLinkedinLatestQuery } from "@/hooks/linkedin/useFetchLinkedinLatestQuery";
 import { toast } from "sonner";
-import { Search, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, ChevronDown, ChevronUp, LoaderCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export interface Lead {
@@ -120,7 +120,11 @@ const Leads = () => {
               disabled={isScraping}
               className="w-full md:w-auto bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition-all duration-300"
             >
-              <Search className="h-4 w-4 mr-2" />
+              {isScraping ? (
+                <LoaderCircle className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Search className="h-4 w-4 mr-2" />
+              )}
               {isScraping ? "Scraping..." : "Scrape Leads"}
             </Button>
           </div>

@@ -9,8 +9,7 @@ import type {
   LinkedinResult,
 } from "../types";
 
-// Define API base URL - in production, this would come from environment variables
-const API_BASE_URL = "http://localhost:4000";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
 
 // Campaign APIs
 export const getCampaigns = async (): Promise<Campaign[]> => {
